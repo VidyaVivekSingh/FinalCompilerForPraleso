@@ -4,6 +4,19 @@ const compiler = require('compilex');
 const cors = require('cors');
 const app = express();
 app.use(cors());
+
+//--------------------glot compiler-------------
+var proxy = require('http-proxy-middleware');
+var glotProxy = proxy({
+    target: 'https://run.glot.io/',
+    headers:{'Authorization':'Token da732786-2b0d-4fd1-b218-d19064119883'},
+    changeOrigin: true,
+    pathRewrite: {
+      '^/glotapi/': '/',
+    },
+  });
+  app.use('/glotapi', glotProxy);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -193,6 +206,7 @@ app.post('/submitCode', (req, res) => {
         });
     }
 });
+
 const PORT = process.env.PORT || 2501;
 app.listen(PORT, () => {
 
